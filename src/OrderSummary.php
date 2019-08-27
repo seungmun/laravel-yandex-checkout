@@ -48,4 +48,24 @@ class OrderSummary extends Model
         'refunded_amount' => 'integer',
         'extra' => 'array',
     ];
+
+    /**
+     * Get the payment record that owns the order summary.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function payment()
+    {
+        return $this->belongsTo(Checkout::paymentModel());
+    }
+
+    /**
+     * Get the orders for the order summary.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function orders()
+    {
+        return $this->hasMany(Checkout::orderModel());
+    }
 }

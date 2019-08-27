@@ -53,12 +53,32 @@ class Payment extends Model
     ];
 
     /**
-     * Get the owning customer model.
+     * Get the owning user(customer) model.
      *
      * @return \Illuminate\Database\Eloquent\Relations\MorphTo
      */
-    public function customer()
+    public function user()
     {
-        return $this->morphTo();
+        return $this->morphTo('customer');
+    }
+
+    /**
+     * Get the order summary record associated with the payment record.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function summary()
+    {
+        return $this->hasOne(Checkout::orderSummaryModel());
+    }
+
+    /**
+     * Get the order summary's orders.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOneThrough
+     */
+    public function orders()
+    {
+        return $this->hasOneThrough(Checkout::orderModel(), Checkout::orderSummaryModel());
     }
 }

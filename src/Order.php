@@ -48,6 +48,16 @@ class Order extends Model
      */
     public function product()
     {
-        return $this->morphTo();
+        return $this->morphTo('product');
+    }
+
+    /**
+     * Get the order summary record that owns the order.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function summary()
+    {
+        return $this->belongsTo(Checkout::orderSummaryModel());
     }
 }
