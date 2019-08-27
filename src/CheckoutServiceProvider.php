@@ -21,6 +21,10 @@ class CheckoutServiceProvider extends Provider
             $this->publishes([
                 __DIR__ . '/../database/migrations' => database_path('migrations'),
             ], 'laravel-yandex-checkout');
+
+            $this->commands([
+                Console\InstallCommand::class,
+            ]);
         }
     }
 
