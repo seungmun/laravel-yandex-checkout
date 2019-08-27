@@ -138,6 +138,7 @@ class Checkout
     public static function routes($callback = null, array $options = [])
     {
         $callback = $callback ?: function ($router) {
+            /** @var \Seungmun\LaravelYandexCheckout\RouteRegistrar $router */
             $router->all();
         };
 
