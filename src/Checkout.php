@@ -35,6 +35,13 @@ class Checkout
     public static $orderModel = 'Seungmun\LaravelYandexCheckout\Models\Order';
 
     /**
+     * The coupon model class name.
+     *
+     * @var string
+     */
+    public static $couponModel = 'Seungmun\LaravelYandexCheckout\Models\Coupon';
+
+    /**
      * Set the payment model class name.
      *
      * @param  string  $paymentModel
@@ -127,6 +134,36 @@ class Checkout
         return new static::$orderModel;
     }
 
+    /**
+     * Set the coupon model class name.
+     *
+     * @param  string  $couponModel
+     * @return void
+     */
+    public static function useCouponModel($couponModel)
+    {
+        static::$couponModel = $couponModel;
+    }
+
+    /**
+     * Get the coupon model class name.
+     *
+     * @return string
+     */
+    public static function couponModel()
+    {
+        return static::$couponModel;
+    }
+
+    /**
+     * Get a new coupon model instance.
+     *
+     * @return \Seungmun\LaravelYandexCheckout\Models\Coupon
+     */
+    public static function coupon()
+    {
+        return new static::$couponModel;
+    }
 
     /**
      * Binds the LaravelYandexCheckout routes into the controller.

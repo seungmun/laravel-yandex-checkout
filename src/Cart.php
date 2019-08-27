@@ -4,6 +4,7 @@ namespace Seungmun\LaravelYandexCheckout;
 
 use Illuminate\Support\Collection;
 use Seungmun\LaravelYandexCheckout\Contracts\Product;
+use Seungmun\LaravelYandexCheckout\Models\IssuedCoupon;
 use Seungmun\LaravelYandexCheckout\Exceptions\CheckoutException;
 
 class Cart
@@ -14,6 +15,13 @@ class Cart
      * @var array
      */
     protected $attributes = [];
+
+    /**
+     * Single-Product model indicator.
+     *
+     * @var string
+     */
+    protected $indicator = null;
 
     /**
      * Cart item collection.
@@ -51,6 +59,10 @@ class Cart
     public function add($item, $quantity = null)
     {
         $item = $this->resolveCartItem($item, $quantity);
+
+        if ( ! is_null($this->indicator) && $this->indicator !== $item->getProduct()->getMorphClass()) {
+            throw new CheckoutException('Only the same kind of products are available for addition.');
+        }
 
         $duplicates = $this->items->filter(function (CartItem $temp) use ($item) {
             return $temp->getProduct()->is($item->getProduct());
@@ -138,6 +150,32 @@ class Cart
     }
 
     /**
+     * Remove all cart items.
+     *
+     * @return \Seungmun\LaravelYandexCheckout\Cart
+     */
+    public function clear()
+    {
+        $this->items = new Collection();
+        $this->indicator = null;
+
+        return $this;
+    }
+
+    /**
+     * Get cart item indicator string or model.
+     *
+     * @param  bool  $asModel
+     * @return \Seungmun\LaravelYandexCheckout\Contracts\Product|\Illuminate\Database\Eloquent\Model|string
+     */
+    public function getIndicator($asModel = false)
+    {
+        $class = $this->indicator;
+
+        return $asModel ? new $class : $class;
+    }
+
+    /**
      * Convert the cart instance to an array.
      *
      * @return array
@@ -145,6 +183,7 @@ class Cart
     public function toArray()
     {
         return [
+            'indicator' => $this->indicator,
             'count' => $this->items->count(),
             'items' => $this->items->map(function (CartItem $item) {
                 return $item->toArray();
@@ -174,5 +213,19 @@ class Cart
         }
 
         return $item;
+    }
+
+    /**
+     * Add a coupon into coupon collection.
+     *
+     * @param  \Seungmun\LaravelYandexCheckout\Models\IssuedCoupon  $coupon
+     * @throws \Seungmun\LaravelYandexCheckout\Exceptions\CheckoutException
+     */
+    public function addCoupon(IssuedCoupon $coupon)
+    {
+        $validator = new CouponValidator($coupon, $this->indicator);
+        $validator->validate();
+
+        $this->coupons->push($coupon);
     }
 }

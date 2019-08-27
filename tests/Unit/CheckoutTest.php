@@ -3,6 +3,7 @@
 namespace Seungmun\LaravelYandexCheckout\Tests\Unit;
 
 use Seungmun\LaravelYandexCheckout\Checkout;
+use Seungmun\LaravelYandexCheckout\Models\Coupon;
 use Seungmun\LaravelYandexCheckout\Models\Order;
 use Seungmun\LaravelYandexCheckout\Models\Payment;
 use Seungmun\LaravelYandexCheckout\Tests\TestCase;
@@ -32,5 +33,13 @@ class CheckoutTest extends TestCase
 
         $this->assertInstanceOf(Order::class, $order);
         $this->assertInstanceOf(Checkout::orderModel(), $order);
+    }
+
+    public function test_coupon_instance_can_be_created()
+    {
+        $coupon = Checkout::coupon();
+
+        $this->assertInstanceOf(Coupon::class, $coupon);
+        $this->assertInstanceOf(Checkout::couponModel(), $coupon);
     }
 }
