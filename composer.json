@@ -29,8 +29,9 @@
         "illuminate/support": "^5.8"
     },
     "require-dev": {
-        "phpunit/phpunit": "^7.5|^8.0",
-        "orchestra/testbench": "~3.8.0"
+        "mockery/mockery": "^1.2",
+        "orchestra/testbench": "~3.8.0",
+        "phpunit/phpunit": "^7.5|^8.0"
     },
     "autoload": {
         "psr-4": {
