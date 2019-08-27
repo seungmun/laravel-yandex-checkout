@@ -13,21 +13,17 @@ class CreateOrderSummariesTable extends Migration
      */
     public function up()
     {
-        Schema::create(config('laravel-yandex-checkout.table.order_summary'), function (Blueprint $table) {
+        Schema::create('order_summaries', function (Blueprint $table) {
             $table->bigIncrements('id');
-
             $table->unsignedBigInteger('payment_id')->nullable();
             $table->foreign('payment_id')
                 ->references('id')
                 ->on(config('laravel-yandex-checkout.table.payment'))
                 ->onDelete('cascade');
-
             $table->string('description');
-
             $table->integer('amount');
-            $table->integer('total_paid');
-            $table->integer('refunded_amount');
-
+            $table->integer('total_paid')->default(0);
+            $table->integer('refunded_amount')->default(0);
             $table->json('extra');
         });
     }
@@ -39,6 +35,6 @@ class CreateOrderSummariesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists(config('laravel-yandex-checkout.table.payment_summary'));
+        Schema::dropIfExists('order_summaries');
     }
 }

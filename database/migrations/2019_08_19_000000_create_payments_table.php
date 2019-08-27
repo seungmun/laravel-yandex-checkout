@@ -14,21 +14,16 @@ class CreatePaymentsTable extends Migration
      */
     public function up()
     {
-        Schema::create(config('laravel-yandex-checkout.table.payment'), function (Blueprint $table) {
+        Schema::create('payments', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->uuid('uuid')->nullable()->unique();
             $table->morphs('customer');
-
             $table->string('shop_key')->nullable();
             $table->boolean('is_paid')->default(false);
-
             $table->enum('status', PaymentStatus::values())->default(PaymentStatus::defaultValue());
-
             $table->timestamp('captured_at')->nullable();
             $table->timestamp('expires_at')->nullable();
-
             $table->json('response');
-
             $table->timestamps();
             $table->softDeletes();
         });
@@ -41,6 +36,6 @@ class CreatePaymentsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists(config('laravel-yandex-checkout.table.payment'));
+        Schema::dropIfExists('payments');
     }
 }

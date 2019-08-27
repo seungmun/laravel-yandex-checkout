@@ -13,23 +13,18 @@ class CreateOrdersTable extends Migration
      */
     public function up()
     {
-        Schema::create(config('laravel-yandex-checkout.table.order'), function (Blueprint $table) {
+        Schema::create('orders', function (Blueprint $table) {
             $table->bigIncrements('id');
-
             $table->unsignedBigInteger('order_summary_id')->nullable();
             $table->foreign('order_summary_id')
                 ->references('id')
                 ->on(config('laravel-yandex-checkout.table.order_summary'))
                 ->onDelete('cascade');
-
             $table->morphs('product');
-
             $table->integer('price');
             $table->integer('quantity');
             $table->integer('amount');
-
-            $table->boolean('is_refunded');
-
+            $table->boolean('is_refunded')->default(false);
             $table->timestamps();
         });
     }
@@ -41,6 +36,6 @@ class CreateOrdersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists(config('laravel-yandex-checkout.table.order'));
+        Schema::dropIfExists('orders');
     }
 }
