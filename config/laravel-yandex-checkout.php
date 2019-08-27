@@ -4,25 +4,31 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Yandex Checkout Shop(Store) Identification ID
+    | Default YandexCheckout Shop Name
     |--------------------------------------------------------------------------
-    |
-    | Check in https://kassa.yandex.ru/my/shop-settings this url.
-    |
     */
 
-    'shop_id' => env('YANDEX_CHECKOUT_SHOP_ID'),
+    'default' => env('CHECKOUT_SHOP', 'default'),
 
     /*
     |--------------------------------------------------------------------------
-    | Secret key for API
+    | YandexCheckout Shops
     |--------------------------------------------------------------------------
-    |
-    | Check in https://kassa.yandex.ru/my/shop-settings this url.
-    |
     */
 
-    'secret_key' => env('YANDEX_CHECKOUT_SECRET_KEY'),
+    'shops' => [
+
+        'default' => [
+            'id' => env('CHECKOUT_SHOP_KEY'),
+            'secret' => env('CHECKOUT_SHOP_SECRET'),
+        ],
+
+        'example' => [
+            'id' => 'example-shop-id',
+            'secret' => 'example-shop-secret',
+        ],
+
+    ],
 
     /*
     |--------------------------------------------------------------------------
@@ -38,12 +44,12 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Payment confirmation locale.
+    | Payment confirmation locale. (ru_RU, en_US)
     |--------------------------------------------------------------------------
     |
-    | The language of the interface, emails, and text messages that will be displayed and sent to the user.
+    | The language of the interface, emails, and text messages
+    | that will be displayed and sent to the user.
     | Formatted in accordance with ISO/IEC 15897.
-    | Possible values: ru_RU, en_US.
     |
     */
 
@@ -69,7 +75,8 @@ return [
     | Payment confirmation return url.
     |--------------------------------------------------------------------------
     |
-    | The URL that the user will return to after confirming or canceling the payment on the web page.
+    | The URL that the user will return to after
+    | confirming or canceling the payment on the web page.
     |
     */
 

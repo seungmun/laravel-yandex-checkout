@@ -2,7 +2,10 @@
 
 namespace Seungmun\LaravelYandexCheckout;
 
+use YandexCheckout\Client;
+use Illuminate\Config\Repository as Config;
 use Illuminate\Support\ServiceProvider as Provider;
+use Seungmun\LaravelYandexCheckout\Contracts\YandexCheckout;
 
 class CheckoutServiceProvider extends Provider
 {
@@ -42,7 +45,36 @@ class CheckoutServiceProvider extends Provider
             );
         }
 
+        $this->registerYandexCheckoutClient();
         $this->offerPublishing();
+    }
+
+    /**
+     * Register the YandexCheckout client.
+     *
+     * @return void
+     */
+    protected function registerYandexCheckoutClient()
+    {
+        $this->app->singleton(YandexCheckout::class, function () {
+            $config = $this->app->make(Config::class)->get('laravel-yandex-checkout');
+            $shop = $config['shops'][$config['default']];
+
+            return tap($this->makeYandexCheckoutClient(), function ($client) use ($shop) {
+                /** @var \Seungmun\LaravelYandexCheckout\Contracts\YandexCheckout $client */
+                $client->setAuth($shop['id'], $shop['secret']);
+            });
+        });
+    }
+
+    /**
+     * Make the YandexCheckout client instance.
+     *
+     * @return \YandexCheckout\Client
+     */
+    public function makeYandexCheckoutClient()
+    {
+        return new Client();
     }
 
     /**

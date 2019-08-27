@@ -19,7 +19,8 @@
         <server name="DB_DATABASE" value="laravel-yandex-checkout"/>
         <server name="DB_USERNAME" value="root"/>
         <server name="DB_PASSWORD" value="root"/>
-        <server name="YANDEX_CHECKOUT_SHOP_ID" value=""/>
-        <server name="YANDEX_CHECKOUT_SECRET_KEY" value=""/>
+        <server name="CHECKOUT_SHOP" value="default"/>
+        <server name="CHECKOUT_SHOP_KEY" value=""/>
+        <server name="CHECKOUT_SHOP_SECRET" value=""/>
     </php>
 </phpunit>
