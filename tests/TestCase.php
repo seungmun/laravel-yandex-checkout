@@ -2,8 +2,8 @@
 
 namespace Seungmun\LaravelYandexCheckout\Tests;
 
-use Seungmun\LaravelYandexCheckout\ServiceProvider;
 use Orchestra\Testbench\TestCase as OrchestraTestCase;
+use Seungmun\LaravelYandexCheckout\CheckoutServiceProvider;
 
 abstract class TestCase extends OrchestraTestCase
 {
@@ -15,7 +15,7 @@ abstract class TestCase extends OrchestraTestCase
      */
     protected function getPackageProviders($app)
     {
-        return [ServiceProvider::class];
+        return [CheckoutServiceProvider::class];
     }
 
     /**
