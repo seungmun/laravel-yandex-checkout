@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit backupGlobals="false"
+         backupStaticAttributes="false"
+         bootstrap="vendor/autoload.php"
+         colors="true"
+         convertErrorsToExceptions="true"
+         convertNoticesToExceptions="true"
+         convertWarningsToExceptions="true"
+         processIsolation="false"
+         stopOnFailure="false">
+    <testsuites>
+        <testsuite name="Laravel Yandex Checkout">
+            <directory suffix=".php">./tests/</directory>
+        </testsuite>
+    </testsuites>
+    <php>
+        <server name="DB_DRIVER" value="mysql"/>
+        <server name="DB_HOST" value="127.0.0.1"/>
+        <server name="DB_DATABASE" value="laravel-yandex-checkout"/>
+        <server name="DB_USERNAME" value="root"/>
+        <server name="DB_PASSWORD" value="root"/>
+        <server name="YANDEX_CHECKOUT_SHOP_ID" value=""/>
+        <server name="YANDEX_CHECKOUT_SECRET_KEY" value=""/>
+    </php>
+</phpunit>

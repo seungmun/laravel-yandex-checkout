@@ -1,0 +1,53 @@
+{
+    "name": "seungmun/laravel-yandex-checkout",
+    "description": "Yandex checkout package for laravel",
+    "keywords": [
+        "laravel",
+        "yandex",
+        "checkout",
+        "yandex-checkout"
+    ],
+    "license": "MIT",
+    "support": {
+        "issues": "https://github.com/seungmun/laravel-yandex-checkout/issues",
+        "source": "https://github.com/seungmun/laravel-yandex-checkout"
+    },
+    "authors": [
+        {
+            "name": "Seungmun Jeong",
+            "email": "seungmunj@gmail.com"
+        }
+    ],
+    "require": {
+        "php": "^7.2",
+        "ext-json": "*",
+        "illuminate/support": "^5.3",
+        "konekt/enum-eloquent": "^1.2",
+        "spatie/laravel-schemaless-attributes": "^1.4",
+        "yandex-money/yandex-checkout-sdk-php": "^1.3"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^7.5|^8.0",
+        "orchestra/testbench": "~3.8.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Seungmun\\LaravelYandexCheckout\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Seungmun\\LaravelYandexCheckout\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Seungmun\\LaravelYandexCheckout\\ServiceProvider"
+            ]
+        }
+    },
+    "config": {
+        "sort-packages": true
+    }
+}
