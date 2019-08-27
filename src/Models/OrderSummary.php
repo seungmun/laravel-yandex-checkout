@@ -1,8 +1,9 @@
 <?php
 
-namespace Seungmun\LaravelYandexCheckout;
+namespace Seungmun\LaravelYandexCheckout\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Seungmun\LaravelYandexCheckout\Checkout;
 
 class OrderSummary extends Model
 {

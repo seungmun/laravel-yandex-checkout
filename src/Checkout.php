@@ -16,21 +16,21 @@ class Checkout
      *
      * @var string
      */
-    public static $paymentModel = 'Seungmun\LaravelYandexCheckout\Payment';
+    public static $paymentModel = 'Seungmun\LaravelYandexCheckout\Models\Payment';
 
     /**
      * The order summary model class name.
      *
      * @var string
      */
-    public static $orderSummaryModel = 'Seungmun\LaravelYandexCheckout\OrderSummary';
+    public static $orderSummaryModel = 'Seungmun\LaravelYandexCheckout\Models\OrderSummary';
 
     /**
      * The order model class name.
      *
      * @var string
      */
-    public static $orderModel = 'Seungmun\LaravelYandexCheckout\Order';
+    public static $orderModel = 'Seungmun\LaravelYandexCheckout\Models\Order';
 
     /**
      * Set the payment model class name.
@@ -56,7 +56,7 @@ class Checkout
     /**
      * Get a new payment model instance.
      *
-     * @return \Seungmun\LaravelYandexCheckout\Payment
+     * @return \Seungmun\LaravelYandexCheckout\Models\Payment
      */
     public static function payment()
     {
@@ -87,7 +87,7 @@ class Checkout
     /**
      * Get a new order summary model instance.
      *
-     * @return \Seungmun\LaravelYandexCheckout\OrderSummary
+     * @return \Seungmun\LaravelYandexCheckout\Models\OrderSummary
      */
     public static function orderSummary()
     {
@@ -118,7 +118,7 @@ class Checkout
     /**
      * Get a new order model instance.
      *
-     * @return \Seungmun\LaravelYandexCheckout\Order
+     * @return \Seungmun\LaravelYandexCheckout\Models\Order
      */
     public static function order()
     {
