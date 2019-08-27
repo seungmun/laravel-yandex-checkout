@@ -86,21 +86,4 @@ return [
 
     'webhook_routes' => true,
 
-    /*
-    |--------------------------------------------------------------------------
-    | Table name definitions.
-    |--------------------------------------------------------------------------
-    |
-    | The table name definitions which are using for model and migrations.
-    |
-    */
-
-    'table' => [
-
-        'payment' => 'payments',
-        'order_summary' => 'order_summaries',
-        'order' => 'orders',
-
-    ],
-
 ];
