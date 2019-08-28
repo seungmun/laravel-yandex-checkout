@@ -185,6 +185,7 @@ class Cart
     {
         return [
             'indicator' => $this->indicator,
+            'description' => $this->getDescription(),
             'count' => $this->items->count(),
             'amount' => $this->getAmount(),
             'discount' => $this->getDiscount(),
@@ -196,6 +197,35 @@ class Cart
                 return $coupon->toArray();
             }),
         ];
+    }
+
+    /**
+     * Get description of the cart.
+     *
+     * @return string
+     */
+    public function getDescription()
+    {
+        return $this->expectsDescription();
+    }
+
+    /**
+     * Expects the description of the cart.
+     *
+     * @return string
+     */
+    protected function expectsDescription()
+    {
+        $description = $this->items->first()->getDescription();
+
+        if ($this->items->count() > 1) {
+            $description .= "외 " . ($this->items->count() - 1) . "건";
+        } else {
+            $quantity = $this->items->first()->getQuantity();
+            $description .= $quantity > 1 ? "(" . $quantity . "개)" : '';
+        }
+
+        return $description;
     }
 
     /**
