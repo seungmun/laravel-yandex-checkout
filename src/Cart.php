@@ -295,11 +295,14 @@ class Cart
      */
     public function getDiscount()
     {
+        $discount = 0;
         $issuedCoupon = $this->coupons->first();
 
-        $discount = $issuedCoupon->coupon->type === 'fixed'
-            ? $issuedCoupon->coupon->value
-            : $this->getAmount() * (int)$issuedCoupon->coupon->value / 100;
+        if ($issuedCoupon) {
+            $discount = $issuedCoupon->coupon->type === 'fixed'
+                ? $issuedCoupon->coupon->value
+                : $this->getAmount() * (int)$issuedCoupon->coupon->value / 100;
+        }
 
         return (int)$discount;
     }
