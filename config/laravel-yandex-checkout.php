@@ -80,6 +80,6 @@ return [
     |
     */
 
-    'confirmation_return_url' => url('/api/payment/success'),
+    'confirmation_return_url' => '/api/payment/success',
 
 ];
