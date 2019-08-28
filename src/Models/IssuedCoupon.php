@@ -151,7 +151,7 @@ class IssuedCoupon extends Model
      */
     public function isExpired()
     {
-        return ! is_null($this->expires_at) && now() > $this->expires_at->isPast();
+        return ! is_null($this->expires_at) && $this->expires_at->isPast();
     }
 
     /**

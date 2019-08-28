@@ -6,6 +6,7 @@ use Seungmun\LaravelYandexCheckout\Cart;
 use Seungmun\LaravelYandexCheckout\CartItem;
 use Seungmun\LaravelYandexCheckout\Tests\TestCase;
 use Seungmun\LaravelYandexCheckout\Contracts\Product;
+use Seungmun\LaravelYandexCheckout\Models\IssuedCoupon;
 
 class CartTest extends TestCase
 {
@@ -67,6 +68,19 @@ class CartTest extends TestCase
         $dummy = $cart->get($product);
 
         $this->assertIsArray($dummy->toArray());
+    }
+
+    public function test_cart_add_coupon()
+    {
+        $product = $this->dummyProduct();
+
+        $cart = new Cart();
+        $cart->add($product);
+
+        $coupon = IssuedCoupon::find(1);
+        $cart->addCoupon($coupon);
+
+        $this->assertTrue($cart->getDiscount() > 0);
     }
 
     private function dummyProduct()

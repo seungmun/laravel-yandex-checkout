@@ -80,6 +80,7 @@ class Cart
             $item = $item->addQuantity($quantity)->clone();
         }
 
+        $this->indicator = $item->getProduct()->getMorphClass();
         $this->items->push($item);
 
         return $this;
@@ -185,13 +186,40 @@ class Cart
         return [
             'indicator' => $this->indicator,
             'count' => $this->items->count(),
+            'amount' => $this->getAmount(),
+            'discount' => $this->getDiscount(),
+            'total_amount' => $this->getTotalAmount(),
             'items' => $this->items->map(function (CartItem $item) {
                 return $item->toArray();
             }),
-            'amount' => $this->items->sum(function (CartItem $item) {
-                return $item->getAmount();
+            'coupons' => $this->coupons->map(function (IssuedCoupon $coupon) {
+                return $coupon->toArray();
             }),
         ];
+    }
+
+    /**
+     * Get sum amount of cart items.
+     *
+     * @return int
+     */
+    public function getAmount()
+    {
+        return $this->items->sum(function (CartItem $item) {
+            return $item->getAmount();
+        });
+    }
+
+    /**
+     * Get discounted total amount of cart items.
+     *
+     * @return int
+     */
+    public function getTotalAmount()
+    {
+        $amount = $this->getAmount() - $this->getDiscount();
+
+        return $amount < 0 ? 0 : $amount;
     }
 
     /**
@@ -226,6 +254,23 @@ class Cart
         $validator = new CouponValidator($coupon, $this->indicator);
         $validator->validate();
 
+        $this->coupons = new Collection();
         $this->coupons->push($coupon);
+    }
+
+    /**
+     * Get sum of discount price of all items.
+     *
+     * @return int
+     */
+    public function getDiscount()
+    {
+        $issuedCoupon = $this->coupons->first();
+
+        $discount = $issuedCoupon->coupon->type === 'fixed'
+            ? $issuedCoupon->coupon->value
+            : $this->getAmount() * (int)$issuedCoupon->coupon->value / 100;
+
+        return (int)$discount;
     }
 }
