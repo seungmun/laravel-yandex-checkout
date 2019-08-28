@@ -82,4 +82,14 @@ class Payment extends Model
     {
         return $this->hasOneThrough(Checkout::orderModel(), Checkout::orderSummaryModel());
     }
+
+    /**
+     * Get confirmation url attribute.
+     *
+     * @return string
+     */
+    public function getConfirmationUrlAttribute()
+    {
+        return config('laravel-yandex-checkout.confirmation_url_prefix') . $this->uuid;
+    }
 }

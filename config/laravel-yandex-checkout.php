@@ -82,4 +82,15 @@ return [
 
     'confirmation_return_url' => '/api/payment/success',
 
+    /*
+    |--------------------------------------------------------------------------
+    | Payment confirmation url.
+    |--------------------------------------------------------------------------
+    |
+    | The URL that the user have to redirect to for payment.
+    |
+    */
+
+    'confirmation_url_prefix' => 'https://money.yandex.ru/payments/external/confirmation?orderId=',
+
 ];

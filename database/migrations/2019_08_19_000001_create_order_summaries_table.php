@@ -22,6 +22,8 @@ class CreateOrderSummariesTable extends Migration
                 ->onDelete('cascade');
             $table->string('description');
             $table->integer('amount');
+            $table->integer('discount');
+            $table->integer('total_amount');
             $table->integer('total_paid')->default(0);
             $table->integer('refunded_amount')->default(0);
             $table->json('extra');

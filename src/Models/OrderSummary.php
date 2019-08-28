@@ -45,6 +45,8 @@ class OrderSummary extends Model
      */
     protected $casts = [
         'amount' => 'integer',
+        'discount' => 'integer',
+        'total_amount' => 'integer',
         'total_paid' => 'integer',
         'refunded_amount' => 'integer',
         'extra' => 'array',

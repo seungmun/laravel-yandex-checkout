@@ -4,6 +4,7 @@ namespace Seungmun\LaravelYandexCheckout;
 
 use YandexCheckout\Client;
 use Illuminate\Config\Repository as Config;
+use Illuminate\Contracts\Container\Container;
 use Illuminate\Support\ServiceProvider as Provider;
 use Seungmun\LaravelYandexCheckout\Contracts\YandexCheckout;
 use Seungmun\LaravelYandexCheckout\Contracts\CheckoutService as CheckoutServiceContract;
@@ -58,8 +59,8 @@ class CheckoutServiceProvider extends Provider
      */
     protected function registerYandexCheckoutClient()
     {
-        $this->app->singleton(YandexCheckout::class, function () {
-            $config = $this->app->make(Config::class)->get('laravel-yandex-checkout');
+        $this->app->singleton(YandexCheckout::class, function (Container $app) {
+            $config = $app->make(Config::class)->get('laravel-yandex-checkout');
             $shop = $config['shops'][$config['default']];
 
             return tap($this->makeYandexCheckoutClient(), function ($client) use ($shop) {
@@ -76,8 +77,8 @@ class CheckoutServiceProvider extends Provider
      */
     protected function registerCheckoutService()
     {
-        $this->app->singleton(CheckoutServiceContract::class, function () {
-            return new CheckoutService($this->app);
+        $this->app->singleton(CheckoutServiceContract::class, function (Container $app) {
+            return new CheckoutService($app);
         });
     }
 
@@ -115,5 +116,15 @@ class CheckoutServiceProvider extends Provider
                 __DIR__ . '/../config/laravel-yandex-checkout.php' => config_path('laravel-yandex-checkout.php'),
             ], 'laravel-yandex-checkout');
         }
+    }
+
+    /**
+     * Get the services provided by the provider.
+     *
+     * @return array
+     */
+    public function provides()
+    {
+        return [CheckoutServiceContract::class];
     }
 }
