@@ -2,17 +2,29 @@
 
 namespace Seungmun\LaravelYandexCheckout\Http\Controllers;
 
+use Illuminate\Http\Request;
+use Seungmun\LaravelYandexCheckout\Traits\HandlesYandex;
+use Seungmun\LaravelYandexCheckout\Exceptions\CheckoutException;
+
 class WebhookController
 {
-    use HandlesCheckoutErrors;
+    use HandlesCheckoutErrors, HandlesYandex;
 
     /**
      * Handle a notification webhook request from the YandexCheckout.
      *
-     * @return array
+     * @param  \Illuminate\Http\Request  $request
+     * @return void
      */
-    public function yandex()
+    public function yandex(Request $request)
     {
-        return [];
+        try {
+            $payment = $this->notificationFactory($request->all());
+            $this->handleNotification($payment);
+        } catch (CheckoutException $e) {
+            return response()->json(['success' => false, 'message' => $e->getMessage()], 400);
+        }
+
+        return response()->json(['success' => true, 'message' => 'ok'], 202);
     }
 }
