@@ -47,7 +47,10 @@
         "laravel": {
             "providers": [
                 "Seungmun\\LaravelYandexCheckout\\ServiceProvider"
-            ]
+            ],
+            "aliases": {
+                "Checkout": "Seungmun\\LaravelYandexCheckout\\CheckoutFacade"
+            }
         }
     },
     "config": {

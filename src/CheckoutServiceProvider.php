@@ -6,6 +6,7 @@ use YandexCheckout\Client;
 use Illuminate\Config\Repository as Config;
 use Illuminate\Support\ServiceProvider as Provider;
 use Seungmun\LaravelYandexCheckout\Contracts\YandexCheckout;
+use Seungmun\LaravelYandexCheckout\Contracts\CheckoutService as CheckoutServiceContract;
 
 class CheckoutServiceProvider extends Provider
 {
@@ -46,6 +47,7 @@ class CheckoutServiceProvider extends Provider
         }
 
         $this->registerYandexCheckoutClient();
+        $this->registerCheckoutService();
         $this->offerPublishing();
     }
 
@@ -64,6 +66,18 @@ class CheckoutServiceProvider extends Provider
                 /** @var \Seungmun\LaravelYandexCheckout\Contracts\YandexCheckout $client */
                 $client->setAuth($shop['id'], $shop['secret']);
             });
+        });
+    }
+
+    /**
+     * Register the payment service.
+     *
+     * @return void
+     */
+    protected function registerCheckoutService()
+    {
+        $this->app->singleton(CheckoutServiceContract::class, function () {
+            return new CheckoutService($this->app);
         });
     }
 
