@@ -306,4 +306,27 @@ class Cart
 
         return (int)$discount;
     }
+
+    /**
+     * Get extra attributes attribute.
+     *
+     * @return array
+     */
+    public function getAttributes()
+    {
+        return $this->attributes;
+    }
+
+    /**
+     * Set extra attributes attribute.
+     *
+     * @param  array  $attributes
+     * @return \Seungmun\LaravelYandexCheckout\Cart
+     */
+    public function setAttributes(array $attributes)
+    {
+        $this->attributes = $attributes;
+
+        return $this;
+    }
 }

@@ -72,7 +72,7 @@ class CheckoutService implements CheckoutServiceContract
             $summary->amount = $cart->getAmount();
             $summary->discount = $cart->getDiscount();
             $summary->total_amount = $cart->getTotalAmount();
-            $summary->extra = [];
+            $summary->extra = $cart->getAttributes();
             $summary->save();
             $payment->summary()->save($summary);
 
