@@ -299,6 +299,7 @@ class Order extends Model
             'discount' => $this->getDiscount(),
             'total_amount' => $this->getTotalAmount(),
             'items' => $this->orderProducts()->with('product')->get(),
+            'coupons' => $this->coupons()->with('couponType')->get(),
         ];
     }
 
