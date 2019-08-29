@@ -125,9 +125,9 @@ class Order extends Model
         }
 
         $item = Checkout::orderProduct();
-        $item->price = $product->price;
+        $item->price = $product->getPrice();
         $item->quantity = $quantity;
-        $item->amount = $product->price * $quantity;
+        $item->amount = $product->getPrice() * $quantity;
         $item->product()->associate($product);
         $this->orderProducts()->save($item);
 
