@@ -3,7 +3,7 @@
 namespace Seungmun\LaravelYandexCheckout\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Builder;
+use Seungmun\LaravelYandexCheckout\Checkout;
 
 class Coupon extends Model
 {
@@ -15,6 +15,13 @@ class Coupon extends Model
     protected $table = 'coupons';
 
     /**
+     * Indicates if the model should be timestamped.
+     *
+     * @var bool
+     */
+    public $timestamps = false;
+
+    /**
      * The guarded attributes on the model.
      *
      * @var array
@@ -22,148 +29,75 @@ class Coupon extends Model
     protected $guarded = [];
 
     /**
-     * The model's attributes.
+     * The attributes that should be mutated to dates.
      *
      * @var array
      */
-    protected $attributes = [
-        'target' => null,
-        'description' => null,
-        'quantity' => null,
-        'is_reusable' => false,
+    protected $dates = [
+        'used_at',
+        'issued_at',
+        'expires_at',
     ];
 
     /**
-     * The attributes that should be cast to native types.
+     * Get the coupon type that owns the coupon.
      *
-     * @var array
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    protected $casts = [
-        'target' => 'string',
-        'quantity' => 'integer',
-        'value' => 'integer',
-        'is_reusable' => 'boolean',
-    ];
-
-    /**
-     * Get all of the issued coupons for the coupon.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function issues()
+    public function couponType()
     {
-        return $this->hasMany(IssuedCoupon::class);
+        return $this->belongsTo(CouponType::class);
     }
 
     /**
-     * Scope a query to only include null target coupons.
+     * Get the order that owns the coupon.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function scopeNonTarget(Builder $query)
+    public function order()
     {
-        return $query->whereNull('target');
+        return $this->belongsTo(Checkout::orderModel());
     }
 
     /**
-     * Scope a query to only include coupons of a given target.
+     * Get the owning user model.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @param  string  $target
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @return \Illuminate\Database\Eloquent\Relations\MorphTo
      */
-    public function scopeOfTarget(Builder $query, string $target)
+    public function user()
     {
-        return $query->where('target', $target);
+        return $this->morphTo('customer');
     }
 
     /**
-     * Scope a query to only include unlimited quantity coupons.
+     * Determine if the issued coupon is suitable for indicator model.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @param  string  $indicator
+     * @return bool
      */
-    public function scopeUnlimited(Builder $query)
+    public function isSuitable($indicator)
     {
-        return $query->whereNull('quantity');
+        return is_null($this->couponType->target) ||
+            ( ! is_null($this->couponType->target) && $this->couponType->target === $indicator);
     }
 
     /**
-     * Scope a query to only include coupons of a given type.
+     * Determine if the issued coupon in already expired.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @param  string  $type
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @return bool
      */
-    public function scopeOfType(Builder $query, string $type)
+    public function isExpired()
     {
-        return $query->where('type', $type);
+        return ! is_null($this->expires_at) && $this->expires_at->isPast();
     }
 
     /**
-     * Scope a query to only include type of fixed coupons.
+     * Determine if the issued coupon is already used.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @return bool
      */
-    public function scopeOfFixed(Builder $query)
+    public function isUsed()
     {
-        return $query->where('type', 'fixed');
-    }
-
-    /**
-     * Scope a query to only include type of percentage coupons.
-     *
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    public function scopeOfPercentage(Builder $query)
-    {
-        return $query->where('type', 'percentage');
-    }
-
-    /**
-     * Scope a query to only include re-usable coupons.
-     *
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    public function scopeReusable(Builder $query)
-    {
-        return $query->where('is_reusable', true);
-    }
-
-    /**
-     * Scope a query to only include no re-usable coupons.
-     *
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    public function scopeNotReusable(Builder $query)
-    {
-        return $query->where('is_reusable', false);
-    }
-
-    /**
-     * Scope a query to only include will expires coupons.
-     *
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    public function scopeExpires(Builder $query)
-    {
-        return $query->whereNotNull('expiry');
-    }
-
-    /**
-     * Scope a query to only include will not expires coupons.
-     *
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    public function scopeNonExpires(Builder $query)
-    {
-        return $query->whereNull('expiry');
+        return ! is_null($this->used_at);
     }
 }

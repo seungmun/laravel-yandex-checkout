@@ -15,17 +15,15 @@ class CreateOrdersTable extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('order_summary_id')->nullable();
-            $table->foreign('order_summary_id')
-                ->references('id')
-                ->on('order_summaries')
-                ->onDelete('cascade');
-            $table->morphs('product');
-            $table->integer('price');
-            $table->integer('quantity');
-            $table->integer('amount');
-            $table->boolean('is_refunded')->default(false);
+            $table->uuid('uuid');
+            $table->morphs('customer');
+            $table->string('description');
+            $table->integer('amount')->default(0);
+            $table->integer('discount')->default(0);
+            $table->integer('total_amount')->default(0);
+            $table->json('extra');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

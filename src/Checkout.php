@@ -22,11 +22,11 @@ class Checkout
     public static $paymentModel = 'Seungmun\LaravelYandexCheckout\Models\Payment';
 
     /**
-     * The order summary model class name.
+     * The order product model class name.
      *
      * @var string
      */
-    public static $orderSummaryModel = 'Seungmun\LaravelYandexCheckout\Models\OrderSummary';
+    public static $orderProductModel = 'Seungmun\LaravelYandexCheckout\Models\OrderProduct';
 
     /**
      * The order model class name.
@@ -74,34 +74,34 @@ class Checkout
     }
 
     /**
-     * Set the order summary model class name.
+     * Set the order product model class name.
      *
-     * @param  string  $orderSummaryModel
+     * @param  string  $orderProductModel
      * @return void
      */
-    public static function useOrderSummaryModel($orderSummaryModel)
+    public static function useOrderProductModel($orderProductModel)
     {
-        static::$orderSummaryModel = $orderSummaryModel;
+        static::$orderProductModel = $orderProductModel;
     }
 
     /**
-     * Get the order summary model class name.
+     * Get the order product model class name.
      *
      * @return string
      */
-    public static function orderSummaryModel()
+    public static function orderProductModel()
     {
-        return static::$orderSummaryModel;
+        return static::$orderProductModel;
     }
 
     /**
-     * Get a new order summary model instance.
+     * Get a new order product model instance.
      *
-     * @return \Seungmun\LaravelYandexCheckout\Models\OrderSummary
+     * @return \Seungmun\LaravelYandexCheckout\Models\OrderProduct
      */
-    public static function orderSummary()
+    public static function orderProduct()
     {
-        return new static::$orderSummaryModel;
+        return new static::$orderProductModel;
     }
 
     /**

@@ -3,8 +3,8 @@
 namespace Seungmun\LaravelYandexCheckout\Bridge;
 
 use Illuminate\Support\Collection;
-use Seungmun\LaravelYandexCheckout\Cart;
 use Illuminate\Contracts\Support\Arrayable;
+use Seungmun\LaravelYandexCheckout\Models\Order;
 
 class CreatePayment implements Arrayable
 {
@@ -53,30 +53,29 @@ class CreatePayment implements Arrayable
     /**
      * Create a new create payment payload instance.
      *
-     * @param  \Seungmun\LaravelYandexCheckout\Cart|null  $cart
-     * @return void
+     * @param  \Seungmun\LaravelYandexCheckout\Models\Order|null  $order
      */
-    public function __construct(Cart $cart = null)
+    public function __construct(Order $order = null)
     {
         $this->items = new Collection();
         $this->setMethodExtra([]);
         $this->setReceiver('email', '');
 
-        if ( ! is_null($cart)) {
-            $this->loadFromCart($cart);
+        if ( ! is_null($order)) {
+            $this->loadFromOrder($order);
         }
     }
 
     /**
-     * Load all data from the given cart.
+     * Load all data from the given order.
      *
-     * @param  \Seungmun\LaravelYandexCheckout\Cart  $cart
+     * @param  \Seungmun\LaravelYandexCheckout\Models\Order  $order
      * @return \Seungmun\LaravelYandexCheckout\Bridge\CreatePayment
      */
-    public function loadFromCart(Cart $cart)
+    public function loadFromOrder(Order $order)
     {
-        $this->setDescription($cart->getDescription())
-            ->add($cart->getDescription(), $cart->getTotalAmount(), 1);
+        $this->setDescription($order->getDescription())
+            ->add($order->getDescription(), $order->getTotalAmount(), 1);
 
         return $this;
     }

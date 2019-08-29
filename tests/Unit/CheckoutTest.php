@@ -2,44 +2,27 @@
 
 namespace Seungmun\LaravelYandexCheckout\Tests\Unit;
 
-use Seungmun\LaravelYandexCheckout\Checkout;
-use Seungmun\LaravelYandexCheckout\Models\Coupon;
-use Seungmun\LaravelYandexCheckout\Models\Order;
-use Seungmun\LaravelYandexCheckout\Models\Payment;
 use Seungmun\LaravelYandexCheckout\Tests\TestCase;
-use Seungmun\LaravelYandexCheckout\Models\OrderSummary;
+use Seungmun\LaravelYandexCheckout\Tests\Unit\Models\Bus;
+use Seungmun\LaravelYandexCheckout\Tests\Unit\Models\User;
+use Seungmun\LaravelYandexCheckout\Contracts\CheckoutService;
 
 class CheckoutTest extends TestCase
 {
-    public function test_payment_instance_can_be_created()
+    public function test_example()
     {
-        $payment = Checkout::payment();
 
-        $this->assertInstanceOf(Payment::class, $payment);
-        $this->assertInstanceOf(Checkout::paymentModel(), $payment);
-    }
+        $checkout = $this->app->make(CheckoutService::class);
 
-    public function test_order_summary_instance_can_be_created()
-    {
-        $summary = Checkout::orderSummary();
+        $order = $checkout->order(User::find(1));
+        $order->addProduct(Bus::find(1), 3);
+        $order->addProduct(Bus::find(2), 3);
+        $order->addProduct(Bus::find(3), 3);
+        $order->addProduct(Bus::find(1), 3);
 
-        $this->assertInstanceOf(OrderSummary::class, $summary);
-        $this->assertInstanceOf(Checkout::orderSummaryModel(), $summary);
-    }
+        $test = $checkout->purchase($order);
+        dd($test->payment->confirmation_url);
 
-    public function test_order_instance_can_be_created()
-    {
-        $order = Checkout::order();
-
-        $this->assertInstanceOf(Order::class, $order);
-        $this->assertInstanceOf(Checkout::orderModel(), $order);
-    }
-
-    public function test_coupon_instance_can_be_created()
-    {
-        $coupon = Checkout::coupon();
-
-        $this->assertInstanceOf(Coupon::class, $coupon);
-        $this->assertInstanceOf(Checkout::couponModel(), $coupon);
+        $this->assertTrue(true);
     }
 }

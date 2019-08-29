@@ -19,7 +19,7 @@ trait HandlesYandex
      *
      * @param  array  $inputs
      * @return \YandexCheckout\Model\PaymentInterface|\YandexCheckout\Model\RefundInterface
-     * @throws \Seungmun\LaravelYandexCheckout\Exceptions\CheckoutException
+     * @throws \Seungmun\LaravelYandexCheckout\Exceptions\CheckoutException()
      */
     public function notificationFactory(array $inputs)
     {
@@ -37,7 +37,7 @@ trait HandlesYandex
                 $notification = new NotificationRefundSucceeded($inputs);
                 break;
             default:
-                throw new CheckoutException('잘 못된 웹훅 요청입니다.');
+                throw new CheckoutException('Invalid Request.');
         }
 
         return $notification->getObject();
@@ -58,12 +58,9 @@ trait HandlesYandex
         $payment = tap($payment)->update([
             'is_paid' => $paymentObject->getPaid(),
             'status' => $paymentObject->getStatus(),
+            'total_paid' => (int)$paymentObject->getAmount()->getValue(),
             'captured_at' => $paymentObject->getCapturedAt(),
             'expires_at' => $paymentObject->getExpiresAt(),
-        ]);
-
-        $payment->summary->update([
-            'total_paid' => (int)$paymentObject->getAmount()->getValue(),
         ]);
 
         return $payment;
@@ -81,7 +78,6 @@ trait HandlesYandex
             ->where('uuid', $refundObject->getId())
             ->firstOrFail();
 
-        // Todo: 환불(취소) 처리 부분에 대한 로직 구현
         return $payment;
     }
 
@@ -90,7 +86,7 @@ trait HandlesYandex
      *
      * @param  \YandexCheckout\Model\PaymentInterface|\YandexCheckout\Model\RefundInterface  $object
      * @return \Seungmun\LaravelYandexCheckout\Models\Payment
-     * @throws \Seungmun\LaravelYandexCheckout\Exceptions\CheckoutException
+     * @throws \Seungmun\LaravelYandexCheckout\Exceptions\CheckoutException()
      */
     public function handleNotification($object)
     {
@@ -102,6 +98,6 @@ trait HandlesYandex
             return $this->handleRefundEvent($object);
         }
 
-        throw new CheckoutException('잘못된 결제정보에 대한 요청입니다.');
+        throw new CheckoutException('Invalid Request.');
     }
 }

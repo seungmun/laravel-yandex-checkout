@@ -4,18 +4,22 @@ namespace Seungmun\LaravelYandexCheckout\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Seungmun\LaravelYandexCheckout\Checkout;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Payment extends Model
 {
-    use SoftDeletes;
-
     /**
      * The database table used by the model.
      *
      * @var string
      */
     protected $table = 'payments';
+
+    /**
+     * Indicates if the model should be timestamped.
+     *
+     * @var bool
+     */
+    public $timestamps = false;
 
     /**
      * The guarded attributes on the model.
@@ -30,11 +34,7 @@ class Payment extends Model
      * @var array
      */
     protected $attributes = [
-        'uuid' => null,
         'is_paid' => false,
-        'captured_at' => null,
-        'expires_at' => null,
-        'status' => 'pending',
     ];
 
     /**
@@ -43,6 +43,7 @@ class Payment extends Model
      * @var array
      */
     protected $casts = [
+        'total_paid' => 'integer',
         'is_paid' => 'boolean',
     ];
 
@@ -57,33 +58,13 @@ class Payment extends Model
     ];
 
     /**
-     * Get the owning user(customer) model.
+     * Get the order type that owns the payment.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\MorphTo
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function user()
+    public function order()
     {
-        return $this->morphTo('customer');
-    }
-
-    /**
-     * Get the order summary record associated with the payment record.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
-     */
-    public function summary()
-    {
-        return $this->hasOne(Checkout::orderSummaryModel());
-    }
-
-    /**
-     * Get the order summary's orders.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasOneThrough
-     */
-    public function orders()
-    {
-        return $this->hasOneThrough(Checkout::orderModel(), Checkout::orderSummaryModel());
+        return $this->belongsTo(Checkout::orderModel());
     }
 
     /**
@@ -94,27 +75,5 @@ class Payment extends Model
     public function getConfirmationUrlAttribute()
     {
         return config('laravel-yandex-checkout.confirmation_url_prefix') . $this->uuid;
-    }
-
-    /**
-     * Get receipt of the payment.
-     *
-     * @return array
-     */
-    public function receipt()
-    {
-        $this->load(['summary.orders', 'summary.issuedCoupons']);
-
-        return [
-            'description' => $this->summary->description,
-            'count' => $this->summary->orders->count(),
-            'amount' => $this->summary->amount,
-            'discount' => $this->summary->discount,
-            'total_amount' => $this->summary->total_amount,
-            'total_paid' => $this->summary->total_paid,
-            'refunded_amount' => $this->summary->refunded_amount,
-            'items' => $this->summary->orders,
-            'coupons' => $this->summary->issuedCoupons,
-        ];
     }
 }

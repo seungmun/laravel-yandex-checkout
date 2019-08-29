@@ -5,9 +5,9 @@ namespace Seungmun\LaravelYandexCheckout\Contracts;
 interface Customer
 {
     /**
-     * Get all of the user(customer)'s comments.
+     * Get all of the user's orders.
      *
      * @return \Illuminate\Database\Eloquent\Relations\MorphMany
      */
-    public function payments();
+    public function orders();
 }
