@@ -17,6 +17,13 @@ class IssuedCoupon extends Model
     protected $table = 'issued_coupons';
 
     /**
+     * Indicates if the model should be timestamped.
+     *
+     * @var bool
+     */
+    public $timestamps = false;
+
+    /**
      * The guarded attributes on the model.
      *
      * @var array

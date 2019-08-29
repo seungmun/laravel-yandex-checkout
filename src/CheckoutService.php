@@ -3,10 +3,12 @@
 namespace Seungmun\LaravelYandexCheckout;
 
 use Exception;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Contracts\Container\Container;
 use Seungmun\LaravelYandexCheckout\Contracts\Customer;
+use Seungmun\LaravelYandexCheckout\Models\IssuedCoupon;
 use Seungmun\LaravelYandexCheckout\Bridge\CreatePayment;
 use Seungmun\LaravelYandexCheckout\Contracts\YandexCheckout;
 use Seungmun\LaravelYandexCheckout\Exceptions\CheckoutException;
@@ -88,6 +90,12 @@ class CheckoutService implements CheckoutServiceContract
 
             $summary->orders()->saveMany($orders);
             $customer->payments()->save($payment);
+
+            $cart->coupons()->each(function (IssuedCoupon $issuedCoupon) use ($summary, $cart) {
+                $issuedCoupon->update(['used_at' => new Carbon]);
+                $issuedCoupon->summary()->save($summary, ['discount' => $cart->getDiscount()]);
+                // 여러 쿠폰 사용으로 확장시 discount 값이 고정으로 입력되는 형태는 오류가 된다.
+            });
 
             return $payment;
         });
