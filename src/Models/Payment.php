@@ -92,4 +92,26 @@ class Payment extends Model
     {
         return config('laravel-yandex-checkout.confirmation_url_prefix') . $this->uuid;
     }
+
+    /**
+     * Get receipt of the payment.
+     *
+     * @return array
+     */
+    public function receipt()
+    {
+        $this->load(['summary.orders', 'summary.issuedCoupons']);
+
+        return [
+            'description' => $this->summary->description,
+            'count' => $this->summary->orders->count(),
+            'amount' => $this->summary->amount,
+            'discount' => $this->summary->discount,
+            'total_amount' => $this->summary->total_amount,
+            'total_paid' => $this->summary->total_paid,
+            'refunded_amount' => $this->summary->refunded_amount,
+            'items' => $this->summary->orders,
+            'coupons' => $this->summary->issuedCoupons,
+        ];
+    }
 }
