@@ -46,7 +46,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Seungmun\\LaravelYandexCheckout\\ServiceProvider"
+                "Seungmun\\LaravelYandexCheckout\\CheckoutServiceProvider"
             ],
             "aliases": {
                 "Checkout": "Seungmun\\LaravelYandexCheckout\\CheckoutFacade"
