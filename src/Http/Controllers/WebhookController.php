@@ -19,8 +19,7 @@ class WebhookController
     public function yandex(Request $request)
     {
         try {
-            $payment = $this->notificationFactory($request->all());
-            $this->handleNotification($payment);
+            $this->handleNotification($this->notificationFactory($request->all()));
         } catch (CheckoutException $e) {
             return response()->json(['success' => false, 'message' => $e->getMessage()], 400);
         }
