@@ -65,6 +65,17 @@ class IssuedCoupon extends Model
     }
 
     /**
+     * The summaries that belong to the issued coupon.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function summary()
+    {
+        return $this->belongsToMany(Checkout::orderSummary())
+            ->withPivot(['discount']);
+    }
+
+    /**
      * Scope a query to only include un-used issued coupons.
      *
      * @param  \Illuminate\Database\Eloquent\Builder  $query

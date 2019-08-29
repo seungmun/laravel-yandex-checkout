@@ -71,4 +71,15 @@ class OrderSummary extends Model
     {
         return $this->hasMany(Checkout::orderModel());
     }
+
+    /**
+     * The issued coupons that belong to the order summary.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function issuedCoupons()
+    {
+        return $this->belongsToMany(IssuedCoupon::class)
+            ->withPivot(['discount']);
+    }
 }
