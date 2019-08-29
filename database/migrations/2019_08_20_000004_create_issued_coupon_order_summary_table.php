@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateCouponOrderSummaryTable extends Migration
+class CreateIssuedCouponOrderSummaryTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateCouponOrderSummaryTable extends Migration
      */
     public function up()
     {
-        Schema::create('coupon_order_summary', function (Blueprint $table) {
+        Schema::create('issued_coupon_order_summary', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('issued_coupon_id');
             $table->foreign('issued_coupon_id')->references('id')->on('issued_coupons');
@@ -30,6 +30,6 @@ class CreateCouponOrderSummaryTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('coupon_order_summary');
+        Schema::dropIfExists('issued_coupon_order_summary');
     }
 }
