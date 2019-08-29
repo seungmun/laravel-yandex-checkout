@@ -21,11 +21,13 @@
     "require": {
         "php": ">=7.1",
         "ext-json": "*",
+        "illuminate/bus": "^5.8",
         "illuminate/config": "^5.8",
         "illuminate/console": "^5.8",
         "illuminate/container": "^5.8",
         "illuminate/contracts": "^5.8",
         "illuminate/database": "^5.8",
+        "illuminate/queue": "^5.8",
         "illuminate/support": "^5.8"
     },
     "require-dev": {

@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Contracts\Container\Container;
 use Seungmun\LaravelYandexCheckout\Contracts\Customer;
+use Seungmun\LaravelYandexCheckout\Jobs\ExpiresPayment;
 use Seungmun\LaravelYandexCheckout\Models\IssuedCoupon;
 use Seungmun\LaravelYandexCheckout\Bridge\CreatePayment;
 use Seungmun\LaravelYandexCheckout\Contracts\YandexCheckout;
@@ -99,6 +100,11 @@ class CheckoutService implements CheckoutServiceContract
 
             return $payment;
         });
+
+        ExpiresPayment::dispatch($payment)
+            ->delay(
+                now()->addMinutes(config('laravel-yandex-checkout.payment_expiry_period'))
+            );
 
         return $payment;
     }

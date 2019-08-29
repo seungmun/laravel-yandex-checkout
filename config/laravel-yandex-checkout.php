@@ -93,4 +93,15 @@ return [
 
     'confirmation_url_prefix' => 'https://money.yandex.ru/payments/external/confirmation?orderId=',
 
+    /*
+    |--------------------------------------------------------------------------
+    | Payment expiry period.
+    |--------------------------------------------------------------------------
+    |
+    | Minutes.
+    |
+    */
+
+    'payment_expiry_period' => 10,
+
 ];
