@@ -24,6 +24,7 @@ class CreatePaymentsTable extends Migration
             $table->timestamp('captured_at')->nullable();
             $table->timestamp('expires_at')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

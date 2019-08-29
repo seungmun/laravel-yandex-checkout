@@ -4,9 +4,12 @@ namespace Seungmun\LaravelYandexCheckout\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Seungmun\LaravelYandexCheckout\Checkout;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Payment extends Model
 {
+    use SoftDeletes;
+
     /**
      * The database table used by the model.
      *
