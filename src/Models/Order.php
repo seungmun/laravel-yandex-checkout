@@ -237,6 +237,19 @@ class Order extends Model
     }
 
     /**
+     * Set extra attribute.
+     *
+     * @param  array  $attributes
+     * @return $this
+     */
+    public function setExtra(array $attributes)
+    {
+        $this->update(['extra' => $attributes]);
+
+        return $this;
+    }
+
+    /**
      * Determine if order has payment.
      *
      * @return bool
