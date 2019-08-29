@@ -289,6 +289,16 @@ class Cart
     }
 
     /**
+     * Get a coupon list collection.
+     *
+     * @return \Illuminate\Support\Collection
+     */
+    public function coupons()
+    {
+        return $this->coupons;
+    }
+
+    /**
      * Get sum of discount price of all items.
      *
      * @return int
