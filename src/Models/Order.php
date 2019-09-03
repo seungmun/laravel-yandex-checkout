@@ -242,7 +242,7 @@ class Order extends Model
      * Set extra attribute.
      *
      * @param  array  $attributes
-     * @return $this
+     * @return \Seungmun\LaravelYandexCheckout\Models\Order
      */
     public function setExtra(array $attributes)
     {

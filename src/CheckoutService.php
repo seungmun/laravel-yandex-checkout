@@ -115,6 +115,20 @@ class CheckoutService
     }
 
     /**
+     * Find order of the specified uuid or throw fails.
+     *
+     * @param  string  $uuid
+     * @return \Illuminate\Database\Eloquent\Model|\Illuminate\Database\Eloquent\Relations\MorphMany
+     */
+    public function findOrderOrFail($uuid)
+    {
+        return $this->user()
+            ->orders()
+            ->where('uuid', $uuid)
+            ->firstOrFail();
+    }
+
+    /**
      * Get currently logged in user.
      *
      * @return \Seungmun\LaravelYandexCheckout\Contracts\Customer|\Illuminate\Contracts\Auth\Authenticatable
