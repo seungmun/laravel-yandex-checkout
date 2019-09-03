@@ -84,13 +84,15 @@ class CheckoutService
      * Purchase all of the items in the specified cart.
      *
      * @param  \Seungmun\LaravelYandexCheckout\Models\Order  $order
+     * @param  bool  $capture
      * @return \Seungmun\LaravelYandexCheckout\Models\Order
      * @throws \Seungmun\LaravelYandexCheckout\Exceptions\CheckoutException
      */
-    public function purchase(Order $order)
+    public function purchase(Order $order, bool $capture = true)
     {
         $payload = $order->payload()
-            ->setReceiver('email', $order->user->email);
+            ->setReceiver('email', $order->user->email)
+            ->autoCapture($capture);
 
         try {
             /** @var \YandexCheckout\Client $client */
