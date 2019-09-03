@@ -51,6 +51,13 @@ class CreatePayment implements Arrayable
     protected $items;
 
     /**
+     * Auto-capture flag.
+     *
+     * @var bool
+     */
+    protected $capture = false;
+
+    /**
      * Create a new create payment payload instance.
      *
      * @param  \Seungmun\LaravelYandexCheckout\Models\Order|null  $order
@@ -219,6 +226,29 @@ class CreatePayment implements Arrayable
     }
 
     /**
+     * Determine if payment is auto capture.
+     *
+     * @return bool
+     */
+    public function isAutoCapture()
+    {
+        return $this->capture;
+    }
+
+    /**
+     * Set capture attribute.
+     *
+     * @param  bool  $capture
+     * @return \Seungmun\LaravelYandexCheckout\Bridge\CreatePayment
+     */
+    public function autoCapture(bool $capture)
+    {
+        $this->capture = $capture;
+
+        return $this;
+    }
+
+    /**
      * Add a new receipt item into the payment receipt item list.
      *
      * @param  string  $description
@@ -319,6 +349,7 @@ class CreatePayment implements Arrayable
             'confirmation' => $this->makeConfirmationData(),
             'payment_method_data' => $this->makePaymentMethodData(),
             'receipt' => $this->makeReceiptData(),
+            'capture' => $this->isAutoCapture(),
         ];
     }
 

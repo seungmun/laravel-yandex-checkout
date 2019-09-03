@@ -118,7 +118,7 @@ class CheckoutService
      * Find order of the specified uuid or throw fails.
      *
      * @param  string  $uuid
-     * @return \Illuminate\Database\Eloquent\Model|\Illuminate\Database\Eloquent\Relations\MorphMany
+     * @return \Seungmun\LaravelYandexCheckout\Models\Order|null
      */
     public function findOrderOrFail($uuid)
     {

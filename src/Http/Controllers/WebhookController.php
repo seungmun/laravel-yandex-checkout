@@ -3,6 +3,7 @@
 namespace Seungmun\LaravelYandexCheckout\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Seungmun\LaravelYandexCheckout\Traits\HandlesYandex;
 use Seungmun\LaravelYandexCheckout\Exceptions\CheckoutException;
 
@@ -18,6 +19,8 @@ class WebhookController
      */
     public function yandex(Request $request)
     {
+        Log::info('new notification arrived.', $request->all());
+
         try {
             $this->handleNotification($this->notificationFactory($request->all()));
         } catch (CheckoutException $e) {
