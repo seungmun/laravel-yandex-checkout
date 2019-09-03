@@ -5,9 +5,9 @@ namespace Seungmun\LaravelYandexCheckout\Models;
 use Illuminate\Support\Str;
 use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Model;
-use Seungmun\LaravelYandexCheckout\Bridge\CreatePayment;
 use Seungmun\LaravelYandexCheckout\Checkout;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Seungmun\LaravelYandexCheckout\Bridge\CreatePayment;
 use Seungmun\LaravelYandexCheckout\Exceptions\CouponException;
 use Seungmun\LaravelYandexCheckout\Exceptions\InvalidProductException;
 
@@ -40,6 +40,7 @@ class Order extends Model
         'amount' => 0,
         'discount' => 0,
         'total_amount' => 0,
+        'status' => 'pending',
     ];
 
     /**
@@ -67,6 +68,7 @@ class Order extends Model
             $model->uuid = Str::uuid();
             $model->description = '-';
             $model->extra = [];
+            $model->status = 'pending';
         });
     }
 
@@ -324,5 +326,25 @@ class Order extends Model
     public function payload()
     {
         return new CreatePayment($this);
+    }
+
+    /**
+     * Determine if order need to purchase.
+     *
+     * @return bool
+     */
+    public function shouldPurchase()
+    {
+        return $this->getTotalAmount() !== 0;
+    }
+
+    /**
+     * Determine if order need not to purchase.
+     *
+     * @return bool
+     */
+    public function shouldNotPurchase()
+    {
+        return ! $this->shouldPurchase();
     }
 }

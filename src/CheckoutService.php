@@ -3,12 +3,14 @@
 namespace Seungmun\LaravelYandexCheckout;
 
 use Exception;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Contracts\Container\Container;
 use Seungmun\LaravelYandexCheckout\Models\Order;
 use Seungmun\LaravelYandexCheckout\Jobs\ExpiresOrder;
 use Seungmun\LaravelYandexCheckout\Contracts\Customer;
+use YandexCheckout\Request\Payments\CreatePaymentResponse;
 use Seungmun\LaravelYandexCheckout\Contracts\YandexCheckout;
 use Seungmun\LaravelYandexCheckout\Exceptions\CheckoutException;
 
@@ -48,6 +50,37 @@ class CheckoutService
     }
 
     /**
+     * Factory method for payment response.
+     *
+     * @param  mixed  $response
+     * @return \Seungmun\LaravelYandexCheckout\Models\Payment
+     */
+    private function paymentFactory($response)
+    {
+        $payment = Checkout::payment();
+
+        if ($response instanceof CreatePaymentResponse) {
+            $payment->uuid = optional($response)->getId() ?? Str::uuid();
+            $payment->shop_id = $response->getRecipient()->getAccountId();
+            $payment->is_paid = $response->getPaid();
+            $payment->status = $response->getStatus();
+            $payment->captured_at = $response->getCapturedAt();
+            $payment->expires_at = $response->getExpiresAt();
+            $payment->total_paid = 0;
+        } else if (is_null($response)) {
+            $payment->uuid = Str::uuid();
+            $payment->shop_id = null;
+            $payment->is_paid = true;
+            $payment->status = 'succeeded';
+            $payment->captured_at = null;
+            $payment->expires_at = null;
+            $payment->total_paid = 0;
+        }
+
+        return $payment;
+    }
+
+    /**
      * Purchase all of the items in the specified cart.
      *
      * @param  \Seungmun\LaravelYandexCheckout\Models\Order  $order
@@ -62,27 +95,21 @@ class CheckoutService
         try {
             /** @var \YandexCheckout\Client $client */
             $client = $this->app->make(YandexCheckout::class);
-            $response = $client->createPayment($payload->payload());
+            $response = $order->shouldPurchase() ? $client->createPayment($payload->payload()) : null;
         } catch (Exception $e) {
             throw new CheckoutException($e);
         }
 
-        DB::transaction(function () use ($order, $response) {
-            $payment = Checkout::payment();
-            $payment->uuid = $response->getId();
-            $payment->shop_id = $response->getRecipient()->getAccountId();
-            $payment->is_paid = $response->getPaid();
-            $payment->total_paid = 0;
-            $payment->status = $response->getStatus();
-            $payment->captured_at = $response->getCapturedAt();
-            $payment->expires_at = $response->getExpiresAt();
+        $payment = DB::transaction(function () use ($order, $response) {
+            $payment = $this->paymentFactory($response);
             $order->addPayment($payment);
+
+            return $payment;
         });
 
-        ExpiresOrder::dispatch($order)
-            ->delay(
-                now()->addMinutes(config('laravel-yandex-checkout.payment_expiry_period'))
-            );
+        ExpiresOrder::dispatch($order)->delay(
+            now()->addMinutes(config('laravel-yandex-checkout.payment_expiry_period'))
+        );
 
         return $order;
     }

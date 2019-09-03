@@ -63,6 +63,15 @@ trait HandlesYandex
             'expires_at' => $paymentObject->getExpiresAt(),
         ]);
 
+        $statusFactory = function ($status) {
+            return $status === 'succeeded' ? 'completed' :
+                $status === 'canceled' ? 'canceled' : 'pending';
+        };
+
+        $payment->order->update([
+            'status' => $statusFactory($paymentObject->getStatus()),
+        ]);
+
         return $payment;
     }
 
