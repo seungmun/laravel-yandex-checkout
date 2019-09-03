@@ -64,8 +64,16 @@ trait HandlesYandex
         ]);
 
         $statusFactory = function ($status) {
-            return $status === 'succeeded' ? 'completed' :
-                $status === 'canceled' ? 'canceled' : 'pending';
+            switch ($status) {
+                case 'succeeded':
+                case 'canceled':
+                    $response = $status;
+                    break;
+                default:
+                    $response = 'pending';
+            }
+            
+            return $response;
         };
 
         $payment->order->update([
