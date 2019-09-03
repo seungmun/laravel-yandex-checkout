@@ -22,7 +22,7 @@ class CreateOrdersTable extends Migration
             $table->integer('discount')->default(0);
             $table->integer('total_amount')->default(0);
             $table->json('extra');
-            $table->enum('status', ['pending', 'completed', 'cancelled']);
+            $table->enum('status', ['pending', 'succeeded', 'canceled']);
             $table->timestamps();
             $table->softDeletes();
         });

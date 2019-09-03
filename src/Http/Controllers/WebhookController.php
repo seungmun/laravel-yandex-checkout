@@ -27,6 +27,6 @@ class WebhookController
             return response()->json(['success' => false, 'message' => $e->getMessage()], 400);
         }
 
-        return response()->json(['success' => true, 'message' => 'ok'], 202);
+        return response()->json(['success' => true, 'message' => 'ok'], 200);
     }
 }
