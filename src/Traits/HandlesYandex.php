@@ -8,6 +8,7 @@ use Seungmun\LaravelYandexCheckout\Checkout;
 use YandexCheckout\Model\NotificationEventType;
 use YandexCheckout\Model\Notification\NotificationCanceled;
 use YandexCheckout\Model\Notification\NotificationSucceeded;
+use Seungmun\LaravelYandexCheckout\Events\PaymentStatusChanged;
 use Seungmun\LaravelYandexCheckout\Exceptions\CheckoutException;
 use YandexCheckout\Model\Notification\NotificationRefundSucceeded;
 use YandexCheckout\Model\Notification\NotificationWaitingForCapture;
@@ -72,13 +73,15 @@ trait HandlesYandex
                 default:
                     $response = 'pending';
             }
-            
+
             return $response;
         };
 
         $payment->order->update([
             'status' => $statusFactory($paymentObject->getStatus()),
         ]);
+
+        event(new PaymentStatusChanged($payment));
 
         return $payment;
     }
