@@ -43,6 +43,13 @@ class Checkout
     public static $couponModel = 'Seungmun\LaravelYandexCheckout\Models\Coupon';
 
     /**
+     * The optional product model class name.
+     *
+     * @var string
+     */
+    public static $optionalProductModel = 'Seungmun\LaravelYandexCheckout\Models\OptionalProduct';
+
+    /**
      * Set the payment model class name.
      *
      * @param  string  $paymentModel
@@ -164,6 +171,37 @@ class Checkout
     public static function coupon()
     {
         return new static::$couponModel;
+    }
+
+    /**
+     * Set the optional product model class name.
+     *
+     * @param  string  $optionalProductModel
+     * @return void
+     */
+    public static function useOptionalProductModel($optionalProductModel)
+    {
+        static::$optionalProductModel = $optionalProductModel;
+    }
+
+    /**
+     * Get the optional product model class name.
+     *
+     * @return string
+     */
+    public static function optionalProductModel()
+    {
+        return static::$optionalProductModel;
+    }
+
+    /**
+     * Get a new optional product model instance.
+     *
+     * @return \Seungmun\LaravelYandexCheckout\Models\OptionalProduct
+     */
+    public static function optionalProduct()
+    {
+        return new static::$optionalProductModel;
     }
 
     /**
