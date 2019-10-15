@@ -3,7 +3,6 @@
 namespace Seungmun\LaravelYandexCheckout;
 
 use Illuminate\Support\Facades\Route;
-use Seungmun\LaravelYandexCheckout\Traits\HandlesPayment;
 
 class Checkout
 {
